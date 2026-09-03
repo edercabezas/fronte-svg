@@ -1,0 +1,44 @@
+
+    <div class="page">
+      <div class="page-header">
+        <button mat-icon-button [routerLink]="['/events', eventId]"><mat-icon>arrow_back</mat-icon></button>
+        <div>
+          <h1>Centro de Reportes</h1>
+          <p>Genera y descarga reportes del evento #{{ eventId }}</p>
+        </div>
+      </div>
+
+      @for (report of availableReports; track report.key) {
+        @if (!report.managerOnly || auth.isManager()) {
+          <mat-card class="report-card">
+            <mat-card-content>
+              <div class="report-icon" [style.background]="report.color">
+                <mat-icon>{{ report.icon }}</mat-icon>
+              </div>
+              <div class="report-info">
+                <h3>{{ report.title }}</h3>
+                <p>{{ report.description }}</p>
+                <ul class="report-includes">
+                  @for (item of report.includes; track item) {
+                    <li><mat-icon inline>check_circle</mat-icon> {{ item }}</li>
+                  }
+                </ul>
+              </div>
+              <div class="report-actions">
+                @if (downloading() === report.key) {
+                  <mat-progress-bar mode="indeterminate" style="width:150px;margin-bottom:8px" />
+                }
+                <button mat-raised-button [color]="report.color === 'primary' ? 'primary' : 'accent'" (click)="download(report.key)" [disabled]="!!downloading()">
+                  <mat-icon>download</mat-icon> Descargar PDF
+                </button>
+                @if (report.hasExcel) {
+                  <button mat-stroked-button (click)="downloadExcel(report.key)" [disabled]="!!downloading()">
+                    <mat-icon>table_chart</mat-icon> Exportar Excel
+                  </button>
+                }
+              </div>
+            </mat-card-content>
+          </mat-card>
+        }
+      }
+    </div>

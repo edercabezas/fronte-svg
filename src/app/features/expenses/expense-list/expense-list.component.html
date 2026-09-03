@@ -1,0 +1,95 @@
+
+    <div class="page">
+      <div class="page-header">
+        <button mat-icon-button [routerLink]="['/events', eventId]"><mat-icon>arrow_back</mat-icon></button>
+        <div>
+          <h1>Gastos del Evento</h1>
+          <p>Control de costos operativos</p>
+        </div>
+        <button mat-raised-button color="primary" (click)="showForm.set(!showForm())">
+          <mat-icon>add</mat-icon> Registrar gasto
+        </button>
+      </div>
+
+      @if (loading()) { <mat-progress-bar mode="indeterminate" /> }
+
+      <!-- SUMMARY -->
+      @if (summary(); as s) {
+        <div class="summary-grid">
+          @for (item of s.items; track item.category) {
+            <div class="summary-box">
+              <mat-icon [ngClass]="'icon-' + item.category">{{ categoryIcon(item.category) }}</mat-icon>
+              <div>
+                <div class="summary-amount">{{ item.total | currency:'COP':'$':'1.0-0' }}</div>
+                <div class="summary-label">{{ categoryLabel(item.category) }}</div>
+              </div>
+            </div>
+          }
+          <div class="summary-box total-box">
+            <mat-icon>account_balance_wallet</mat-icon>
+            <div>
+              <div class="summary-amount">{{ s.grandTotal | currency:'COP':'$':'1.0-0' }}</div>
+              <div class="summary-label">Total General</div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- FORM -->
+      @if (showForm()) {
+        <mat-card class="form-card">
+          <mat-card-header><mat-card-title>Nuevo Gasto</mat-card-title></mat-card-header>
+          <mat-card-content>
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-grid">
+              <mat-form-field appearance="outline">
+                <mat-label>Categoría</mat-label>
+                <mat-select formControlName="category">
+                  <mat-option value="refreshments">Refrigerios</mat-option>
+                  <mat-option value="transport">Transporte</mat-option>
+                  <mat-option value="materials">Materiales</mat-option>
+                  <mat-option value="other">Otros</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full">
+                <mat-label>Descripción</mat-label>
+                <input matInput formControlName="description">
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Cantidad</mat-label>
+                <input matInput formControlName="quantity" type="number" min="1">
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Precio unitario</mat-label>
+                <input matInput formControlName="unitPrice" type="number" min="0">
+                <span matPrefix>$&nbsp;</span>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Fecha del gasto</mat-label>
+                <input matInput formControlName="expenseDate" type="date">
+              </mat-form-field>
+              <div class="form-actions">
+                <button mat-button type="button" (click)="showForm.set(false)">Cancelar</button>
+                <button mat-raised-button color="primary" type="submit">Guardar</button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      }
+
+      <!-- TABLE -->
+      <mat-card>
+        <mat-card-content style="padding:0">
+          <table mat-table [dataSource]="expenses()" class="full-table">
+            <ng-container matColumnDef="date"><th mat-header-cell *matHeaderCellDef>Fecha</th><td mat-cell *matCellDef="let e">{{ e.expenseDate | date:'dd/MM/yyyy' }}</td></ng-container>
+            <ng-container matColumnDef="category"><th mat-header-cell *matHeaderCellDef>Categoría</th><td mat-cell *matCellDef="let e"><span class="cat-badge" [ngClass]="'cat-' + e.category">{{ categoryLabel(e.category) }}</span></td></ng-container>
+            <ng-container matColumnDef="description"><th mat-header-cell *matHeaderCellDef>Descripción</th><td mat-cell *matCellDef="let e">{{ e.description }}</td></ng-container>
+            <ng-container matColumnDef="qty"><th mat-header-cell *matHeaderCellDef>Cant.</th><td mat-cell *matCellDef="let e">{{ e.quantity }}</td></ng-container>
+            <ng-container matColumnDef="unit"><th mat-header-cell *matHeaderCellDef>Precio Unit.</th><td mat-cell *matCellDef="let e">{{ e.unitPrice | currency:'COP':'$':'1.0-0' }}</td></ng-container>
+            <ng-container matColumnDef="total"><th mat-header-cell *matHeaderCellDef>Total</th><td mat-cell *matCellDef="let e"><strong>{{ e.amount | currency:'COP':'$':'1.0-0' }}</strong></td></ng-container>
+            <ng-container matColumnDef="actions"><th mat-header-cell *matHeaderCellDef></th><td mat-cell *matCellDef="let e"><button mat-icon-button (click)="delete(e)"><mat-icon style="color:#e94560">delete</mat-icon></button></td></ng-container>
+            <tr mat-header-row *matHeaderRowDef="columns"></tr>
+            <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>

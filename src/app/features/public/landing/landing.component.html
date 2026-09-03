@@ -1,0 +1,478 @@
+<div class="root">
+
+  <!-- ═══ NAVBAR ═══ -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <div class="nav-logo"><mat-icon>verified</mat-icon></div>
+        <div>
+          <span class="nav-title">CertPlatform</span>
+          <span class="nav-sub">Certificaciones profesionales</span>
+        </div>
+      </div>
+      <a routerLink="/auth/login" class="nav-admin-link">
+        <mat-icon>lock_person</mat-icon>
+        <span>Área Administrativa</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="hero-layout">
+      <div class="hero-text">
+        <div class="hero-pill">
+          <span class="pill-dot"></span>
+          {{ events().length }} eventos disponibles · Registro abierto
+        </div>
+
+        <h1 class="hero-h1">
+          Tu certificación<br>
+          <span class="gradient-text">comienza aquí</span>
+        </h1>
+
+        <p class="hero-p">
+          Inscríbete en la capacitación para la que fuiste convocado.
+          Sin contraseñas, sin cuentas, en menos de 2 minutos.
+        </p>
+
+        <ul class="hero-checks">
+          <li><mat-icon>check_circle</mat-icon> Sin necesidad de crear una cuenta</li>
+          <li><mat-icon>check_circle</mat-icon> Confirmación inmediata de tu registro</li>
+          <li><mat-icon>check_circle</mat-icon> Certificado digital al aprobar</li>
+        </ul>
+
+        <div class="hero-btns">
+          <a href="#registro" class="btn-primary-hero">
+            <mat-icon>how_to_reg</mat-icon>
+            Inscribirme ahora
+          </a>
+          <div class="hero-stats">
+            <div class="hstat"><span class="hstat-n">2.4k+</span><span class="hstat-l">Certificados</span></div>
+            <div class="hstat-div"></div>
+            <div class="hstat"><span class="hstat-n">98%</span><span class="hstat-l">Satisfacción</span></div>
+            <div class="hstat-div"></div>
+            <div class="hstat"><span class="hstat-n">100%</span><span class="hstat-l">Gratuito</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="cert-card">
+          <div class="cert-top">
+            <mat-icon class="cert-logo-icon">verified</mat-icon>
+            <span>CertPlatform</span>
+            <span class="cert-top-badge">Oficial</span>
+          </div>
+          <div class="cert-avatar-wrap">
+            <div class="cert-avatar">JC</div>
+            <div class="cert-online-dot"></div>
+          </div>
+          <div class="cert-name">Juan Carlos Pérez</div>
+          <div class="cert-event">Seguridad Industrial · Nivel II</div>
+          <div class="cert-divider"></div>
+          <div class="cert-footer">
+            <div class="cert-status-badge">
+              <mat-icon>workspace_premium</mat-icon>
+              Certificado
+            </div>
+            <span class="cert-date">Jun 2026</span>
+          </div>
+        </div>
+        <div class="float-pill pill-a">
+          <mat-icon>people</mat-icon> +2.400 participantes
+        </div>
+        <div class="float-pill pill-b">
+          <mat-icon>bolt</mat-icon> Registro en 2 min
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-scroll-hint">
+      <span>Ir al formulario</span>
+      <mat-icon>keyboard_arrow_down</mat-icon>
+    </div>
+  </section>
+
+  <!-- ═══ CÓMO FUNCIONA ═══ -->
+  <section class="how-section">
+    <div class="how-inner">
+      <div class="section-eyebrow">¿Cómo funciona?</div>
+      <h2 class="section-title">Tres pasos y listo</h2>
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="how-num">01</div>
+          <div class="how-icon-wrap"><mat-icon>event_note</mat-icon></div>
+          <h3>Elige tu evento</h3>
+          <p>Selecciona la capacitación de certificación a la que fuiste convocado</p>
+        </div>
+        <div class="how-connector">
+          <div class="connector-line"></div>
+          <mat-icon class="connector-arrow">arrow_forward</mat-icon>
+        </div>
+        <div class="how-step">
+          <div class="how-num">02</div>
+          <div class="how-icon-wrap"><mat-icon>person_outline</mat-icon></div>
+          <h3>Ingresa tus datos</h3>
+          <p>Completa tu información personal y de contacto de forma segura</p>
+        </div>
+        <div class="how-connector">
+          <div class="connector-line"></div>
+          <mat-icon class="connector-arrow">arrow_forward</mat-icon>
+        </div>
+        <div class="how-step">
+          <div class="how-num">03</div>
+          <div class="how-icon-wrap"><mat-icon>verified_user</mat-icon></div>
+          <h3>¡Confirmado!</h3>
+          <p>Queda inscrito al instante y recibe los detalles del evento</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FORMULARIO ═══ -->
+  <section class="form-section" id="registro">
+    <div class="form-bg-blob"></div>
+
+    <div class="form-outer">
+
+      @if (registrationSuccess()) {
+        <!-- ── SUCCESS ── -->
+        <div class="success-card">
+          <div class="success-glow"></div>
+          <div class="success-check">
+            <mat-icon>check</mat-icon>
+          </div>
+          <h2>¡Inscripción exitosa!</h2>
+          <p>Tu registro fue recibido correctamente. Guarda este resumen:</p>
+          <div class="success-grid">
+            <div class="sg-item">
+              <mat-icon>person</mat-icon>
+              <div><span>Nombre</span><strong>{{ form.get('personal.name')?.value }}</strong></div>
+            </div>
+            <div class="sg-item">
+              <mat-icon>badge</mat-icon>
+              <div><span>Documento</span><strong>{{ form.get('personal.documentType')?.value }} · {{ form.get('personal.documentId')?.value }}</strong></div>
+            </div>
+            <div class="sg-item">
+              <mat-icon>event</mat-icon>
+              <div><span>Evento</span><strong>{{ selectedEventName() }}</strong></div>
+            </div>
+            @if (selectedEvent(); as se) {
+              <div class="sg-item">
+                <mat-icon>place</mat-icon>
+                <div><span>Ciudad / Modalidad</span><strong>{{ se.city || se.location || 'Por definir' }} · {{ se.modality }}</strong></div>
+              </div>
+            }
+            <div class="sg-item">
+              <mat-icon>email</mat-icon>
+              <div><span>Correo</span><strong>{{ form.get('contact.email')?.value }}</strong></div>
+            </div>
+          </div>
+          <div class="success-info">
+            <mat-icon>info</mat-icon>
+            <span>Recibirás un correo con los detalles del evento. ¡Mucho éxito!</span>
+          </div>
+          <button class="btn-primary-hero" (click)="resetForm()">
+            <mat-icon>add</mat-icon> Registrar otra persona
+          </button>
+        </div>
+
+      } @else {
+        <!-- ── FORM CARD ── -->
+        <div class="form-card">
+          <!-- Progress bar -->
+          <div class="form-progress-bar">
+            <div class="fpb-fill" [style.width]="(currentStep() / 4 * 100) + '%'"></div>
+          </div>
+
+          <div class="form-card-header">
+            <h2>Formulario de Inscripción</h2>
+            <span class="form-step-counter">Paso {{ currentStep() }} de 4</span>
+          </div>
+
+          <!-- Step indicators -->
+          <div class="step-dots">
+            <div class="sdot" [ngClass]="{ active: currentStep() === 1, done: currentStep() > 1 }">
+              <div class="sdot-circle">
+                @if (currentStep() > 1) { <mat-icon>check</mat-icon> } @else { <span>1</span> }
+              </div>
+              <span>Evento</span>
+            </div>
+            <div class="sdot-line" [ngClass]="{ filled: currentStep() > 1 }"></div>
+            <div class="sdot" [ngClass]="{ active: currentStep() === 2, done: currentStep() > 2 }">
+              <div class="sdot-circle">
+                @if (currentStep() > 2) { <mat-icon>check</mat-icon> } @else { <span>2</span> }
+              </div>
+              <span>Datos</span>
+            </div>
+            <div class="sdot-line" [ngClass]="{ filled: currentStep() > 2 }"></div>
+            <div class="sdot" [ngClass]="{ active: currentStep() === 3, done: currentStep() > 3 }">
+              <div class="sdot-circle">
+                @if (currentStep() > 3) { <mat-icon>check</mat-icon> } @else { <span>3</span> }
+              </div>
+              <span>Contacto</span>
+            </div>
+            <div class="sdot-line" [ngClass]="{ filled: currentStep() > 3 }"></div>
+            <div class="sdot" [ngClass]="{ active: currentStep() === 4 }">
+              <div class="sdot-circle"><span>4</span></div>
+              <span>Confirmar</span>
+            </div>
+          </div>
+
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <mat-stepper linear #stepper class="ghost-stepper"
+                         (selectionChange)="onStepChange($event)">
+
+              <!-- ─ STEP 1: EVENTO ─ -->
+              <mat-step [stepControl]="form.get('event')!" label="Evento">
+                <div formGroupName="event" class="step-body">
+                  <div class="step-heading">
+                    <div class="step-heading-icon"><mat-icon>event_note</mat-icon></div>
+                    <div>
+                      <h3>Selecciona tu evento</h3>
+                      <p>Elige la capacitación para la que fuiste convocado</p>
+                    </div>
+                  </div>
+
+                  @if (loadingEvents()) {
+                    <div class="loading-row">
+                      <mat-spinner diameter="28"></mat-spinner>
+                      <span>Cargando eventos disponibles…</span>
+                    </div>
+                  }
+
+                  <div class="events-grid">
+                    @for (event of events(); track event.id) {
+                      <div class="event-card"
+                           [ngClass]="{ selected: form.get('event.eventId')?.value === event.id }"
+                           (click)="selectEvent(event)">
+                        <div class="ec-top">
+                          <div class="ec-icon"><mat-icon>workspace_premium</mat-icon></div>
+                          <span class="ec-dot" [ngClass]="event.status"></span>
+                        </div>
+                        <div class="ec-name">{{ event.name }}</div>
+                        <div class="ec-meta">
+                          <span><mat-icon>place</mat-icon>{{ event.city || event.location || 'Por definir' }}</span>
+                          <span><mat-icon>laptop</mat-icon>{{ event.modality }}</span>
+                          <span><mat-icon>calendar_today</mat-icon>{{ formatDate(event.startDate) }}</span>
+                        </div>
+                        @if (form.get('event.eventId')?.value === event.id) {
+                          <div class="ec-selected"><mat-icon>check_circle</mat-icon> Seleccionado</div>
+                        }
+                      </div>
+                    }
+                  </div>
+
+                  @if (form.get('event.eventId')?.touched && form.get('event.eventId')?.invalid) {
+                    <div class="field-error"><mat-icon>error_outline</mat-icon> Debes seleccionar un evento</div>
+                  }
+
+                  <div class="step-actions">
+                    <button type="button" mat-raised-button class="btn-next" matStepperNext
+                            [disabled]="form.get('event')?.invalid">
+                      Continuar <mat-icon>arrow_forward</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </mat-step>
+
+              <!-- ─ STEP 2: DATOS PERSONALES ─ -->
+              <mat-step [stepControl]="form.get('personal')!" label="Datos">
+                <div formGroupName="personal" class="step-body">
+                  <div class="step-heading">
+                    <div class="step-heading-icon"><mat-icon>person_outline</mat-icon></div>
+                    <div>
+                      <h3>Información personal</h3>
+                      <p>Tus datos de identificación</p>
+                    </div>
+                  </div>
+
+                  <div class="fields-grid">
+                    <mat-form-field appearance="outline" class="col-2">
+                      <mat-label>Nombre completo</mat-label>
+                      <mat-icon matPrefix>person</mat-icon>
+                      <input matInput formControlName="name" placeholder="Ej: Juan Carlos Pérez García">
+                      @if (hasError('personal.name', 'required')) {
+                        <mat-error>El nombre es requerido</mat-error>
+                      }
+                      @if (hasError('personal.name', 'minlength')) {
+                        <mat-error>Mínimo 5 caracteres</mat-error>
+                      }
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                      <mat-label>Tipo de documento</mat-label>
+                      <mat-icon matPrefix>badge</mat-icon>
+                      <mat-select formControlName="documentType">
+                        @for (dt of documentTypes; track dt.value) {
+                          <mat-option [value]="dt.value">{{ dt.label }}</mat-option>
+                        }
+                      </mat-select>
+                      @if (hasError('personal.documentType', 'required')) {
+                        <mat-error>Campo requerido</mat-error>
+                      }
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                      <mat-label>Número de documento</mat-label>
+                      <input matInput formControlName="documentId" placeholder="Ej: 1234567890">
+                      @if (hasError('personal.documentId', 'required')) {
+                        <mat-error>Campo requerido</mat-error>
+                      }
+                    </mat-form-field>
+
+                  </div>
+
+                  <div class="step-actions">
+                    <button type="button" mat-stroked-button class="btn-back" matStepperPrevious>
+                      <mat-icon>arrow_back</mat-icon> Anterior
+                    </button>
+                    <button type="button" mat-raised-button class="btn-next" matStepperNext
+                            [disabled]="form.get('personal')?.invalid">
+                      Continuar <mat-icon>arrow_forward</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </mat-step>
+
+              <!-- ─ STEP 3: CONTACTO ─ -->
+              <mat-step [stepControl]="form.get('contact')!" label="Contacto">
+                <div formGroupName="contact" class="step-body">
+                  <div class="step-heading">
+                    <div class="step-heading-icon"><mat-icon>contact_phone</mat-icon></div>
+                    <div>
+                      <h3>Información de contacto</h3>
+                      <p>Te enviaremos los detalles del evento</p>
+                    </div>
+                  </div>
+
+                  <div class="fields-grid">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Teléfono / Celular</mat-label>
+                      <mat-icon matPrefix>phone</mat-icon>
+                      <input matInput formControlName="phone" type="tel" placeholder="Ej: 3001234567">
+                      @if (hasError('contact.phone', 'required')) {
+                        <mat-error>El teléfono es requerido</mat-error>
+                      }
+                      @if (hasError('contact.phone', 'pattern')) {
+                        <mat-error>Número inválido</mat-error>
+                      }
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                      <mat-label>Correo electrónico</mat-label>
+                      <mat-icon matPrefix>email</mat-icon>
+                      <input matInput formControlName="email" type="email" placeholder="correo@ejemplo.com">
+                      @if (hasError('contact.email', 'required')) {
+                        <mat-error>El correo es requerido</mat-error>
+                      }
+                      @if (hasError('contact.email', 'email')) {
+                        <mat-error>Correo inválido</mat-error>
+                      }
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="col-2">
+                      <mat-label>Dirección de residencia</mat-label>
+                      <mat-icon matPrefix>home</mat-icon>
+                      <input matInput formControlName="address" placeholder="Ej: Calle 45 # 12-34, Barrio Centro">
+                      @if (hasError('contact.address', 'required')) {
+                        <mat-error>La dirección es requerida</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+
+                  <div class="step-actions">
+                    <button type="button" mat-stroked-button class="btn-back" matStepperPrevious>
+                      <mat-icon>arrow_back</mat-icon> Anterior
+                    </button>
+                    <button type="button" mat-raised-button class="btn-next" matStepperNext
+                            [disabled]="form.get('contact')?.invalid">
+                      Continuar <mat-icon>arrow_forward</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </mat-step>
+
+              <!-- ─ STEP 4: CONFIRMAR ─ -->
+              <mat-step label="Confirmar">
+                <div class="step-body">
+                  <div class="step-heading">
+                    <div class="step-heading-icon"><mat-icon>fact_check</mat-icon></div>
+                    <div>
+                      <h3>Revisa y confirma</h3>
+                      <p>Verifica que toda la información sea correcta</p>
+                    </div>
+                  </div>
+
+                  <div class="confirm-cards">
+                    <div class="confirm-block">
+                      <div class="cb-label"><mat-icon>event</mat-icon> Evento seleccionado</div>
+                      <div class="cb-value">{{ selectedEventName() }}</div>
+                    </div>
+                    <div class="confirm-block">
+                      <div class="cb-label"><mat-icon>person</mat-icon> Datos personales</div>
+                      <div class="cb-rows">
+                        <div class="cb-row"><span>Nombre</span><strong>{{ form.get('personal.name')?.value }}</strong></div>
+                        <div class="cb-row"><span>Documento</span><strong>{{ form.get('personal.documentType')?.value }} {{ form.get('personal.documentId')?.value }}</strong></div>
+                      </div>
+                    </div>
+                    <div class="confirm-block">
+                      <div class="cb-label"><mat-icon>contact_phone</mat-icon> Contacto</div>
+                      <div class="cb-rows">
+                        <div class="cb-row"><span>Teléfono</span><strong>{{ form.get('contact.phone')?.value }}</strong></div>
+                        <div class="cb-row"><span>Correo</span><strong>{{ form.get('contact.email')?.value }}</strong></div>
+                        <div class="cb-row"><span>Dirección</span><strong>{{ form.get('contact.address')?.value }}</strong></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  @if (errorMsg()) {
+                    <div class="error-banner">
+                      <mat-icon>error_outline</mat-icon> {{ errorMsg() }}
+                    </div>
+                  }
+
+                  <div class="step-actions">
+                    <button type="button" mat-stroked-button class="btn-back" matStepperPrevious>
+                      <mat-icon>arrow_back</mat-icon> Anterior
+                    </button>
+                    <button type="submit" class="btn-submit" [disabled]="loading() || form.invalid">
+                      @if (loading()) {
+                        <mat-spinner diameter="20"></mat-spinner>
+                      }
+                      @if (!loading()) {
+                        <mat-icon>how_to_reg</mat-icon>
+                      }
+                      @if (!loading()) { Confirmar inscripción }
+                    </button>
+                  </div>
+                </div>
+              </mat-step>
+
+            </mat-stepper>
+          </form>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <mat-icon>verified</mat-icon>
+        <span>CertPlatform © 2026</span>
+      </div>
+      <a routerLink="/auth/login" class="footer-admin">
+        <mat-icon>admin_panel_settings</mat-icon>
+        Acceso para administradores
+      </a>
+    </div>
+  </footer>
+
+</div>

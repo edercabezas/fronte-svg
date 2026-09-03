@@ -1,0 +1,264 @@
+
+    <div class="page">
+
+      <!-- HEADER -->
+      <div class="page-header">
+        <div class="header-left">
+          <div class="title-icon"><mat-icon>how_to_reg</mat-icon></div>
+          <div>
+            <h1>Registros de Capacitación</h1>
+            <p>Personas inscritas a los eventos de certificación</p>
+          </div>
+        </div>
+        <div class="header-kpis">
+          <div class="kpi">
+            <span class="kpi-num">{{ allParticipants().length }}</span>
+            <span class="kpi-lbl">Total registrados</span>
+          </div>
+          <div class="kpi">
+            <span class="kpi-num pending">{{ countByStatus('pending') }}</span>
+            <span class="kpi-lbl">Pendientes</span>
+          </div>
+          <div class="kpi">
+            <span class="kpi-num approved">{{ countByStatus('approved') }}</span>
+            <span class="kpi-lbl">Aprobados</span>
+          </div>
+          <div class="kpi">
+            <span class="kpi-num failed">{{ countByStatus('failed') }}</span>
+            <span class="kpi-lbl">Reprobados</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTROS -->
+      <mat-card class="filters-card">
+        <div class="filters">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Buscar por nombre o documento</mat-label>
+            <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()" placeholder="Ej: Juan Pérez o 1234567890">
+            <mat-icon matPrefix>search</mat-icon>
+            @if (searchTerm) {
+              <button matSuffix mat-icon-button (click)="searchTerm = ''; applyFilters()">
+                <mat-icon>close</mat-icon>
+              </button>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="event-filter">
+            <mat-label>Filtrar por evento</mat-label>
+            <mat-select [(ngModel)]="selectedEventId" (ngModelChange)="applyFilters()">
+              <mat-option [value]="null">Todos los eventos</mat-option>
+              @for (ev of events(); track ev.id) {
+                <mat-option [value]="ev.id">{{ ev.name }}</mat-option>
+              }
+            </mat-select>
+            <mat-icon matPrefix>event</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="status-filter">
+            <mat-label>Estado</mat-label>
+            <mat-select [(ngModel)]="selectedStatus" (ngModelChange)="applyFilters()">
+              <mat-option [value]="null">Todos</mat-option>
+              <mat-option value="pending">Pendiente</mat-option>
+              <mat-option value="approved">Aprobado</mat-option>
+              <mat-option value="failed">Reprobado</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="event-filter">
+            <mat-label>Filtrar por capacitador</mat-label>
+            <mat-select [(ngModel)]="selectedTrainerId" (ngModelChange)="applyFilters()">
+              <mat-option [value]="null">Todos los capacitadores</mat-option>
+              @for (t of trainers; track t.id) {
+                <mat-option [value]="t.id">{{ t.name }}</mat-option>
+              }
+            </mat-select>
+            <mat-icon matPrefix>groups</mat-icon>
+          </mat-form-field>
+
+          @if (searchTerm || selectedEventId || selectedStatus || selectedTrainerId) {
+            <button mat-stroked-button (click)="clearFilters()" class="clear-btn">
+              <mat-icon>filter_alt_off</mat-icon> Limpiar
+            </button>
+          }
+        </div>
+        @if (filtered().length !== allParticipants().length) {
+          <p class="filter-info">
+            Mostrando <strong>{{ filtered().length }}</strong> de <strong>{{ allParticipants().length }}</strong> registros
+          </p>
+        }
+      </mat-card>
+
+      <!-- TABLA -->
+      @if (loading()) { <mat-progress-bar mode="indeterminate" /> }
+
+      <mat-card>
+        <mat-card-content style="padding:0">
+          <table mat-table [dataSource]="filtered()" [multiTemplateDataRows]="true" class="registrations-table">
+
+            <!-- NOMBRE + DOCUMENTO -->
+            <ng-container matColumnDef="participant">
+              <th mat-header-cell *matHeaderCellDef>Participante</th>
+              <td mat-cell *matCellDef="let p">
+                <div class="participant-cell">
+                  <div class="avatar">{{ initials(p.name) }}</div>
+                  <div>
+                    <strong>{{ p.name }}</strong>
+                    <div class="doc-info">
+                      <span class="doc-badge">{{ p.documentType }}</span>
+                      {{ p.documentId }}
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- EVENTO -->
+            <ng-container matColumnDef="event">
+              <th mat-header-cell *matHeaderCellDef>Evento</th>
+              <td mat-cell *matCellDef="let p">
+                <span class="event-name">{{ eventName(p.eventId) }}</span>
+              </td>
+            </ng-container>
+
+            <!-- CAPACITADOR ASIGNADO -->
+            <ng-container matColumnDef="trainer">
+              <th mat-header-cell *matHeaderCellDef>Capacitador</th>
+              <td mat-cell *matCellDef="let p">
+                <span class="trainer-name">{{ trainerNames(p.eventId) }}</span>
+              </td>
+            </ng-container>
+
+            <!-- CONTACTO -->
+            <ng-container matColumnDef="contact">
+              <th mat-header-cell *matHeaderCellDef>Contacto</th>
+              <td mat-cell *matCellDef="let p">
+                <div class="contact-cell">
+                  @if (p.email) { <span><mat-icon inline>email</mat-icon> {{ p.email }}</span> }
+                  @if (p.phone) { <span><mat-icon inline>phone</mat-icon> {{ p.phone }}</span> }
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- EDAD / FECHA -->
+            <ng-container matColumnDef="age">
+              <th mat-header-cell *matHeaderCellDef>Edad</th>
+              <td mat-cell *matCellDef="let p">
+                @if (p.age) {
+                  <span class="age-badge">{{ p.age }} años</span>
+                } @else { <span class="na">—</span> }
+              </td>
+            </ng-container>
+
+            <!-- ESTADO -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Estado</th>
+              <td mat-cell *matCellDef="let p">
+                <span class="cert-badge" [ngClass]="'cert-' + p.certificationStatus">
+                  {{ certLabel(p.certificationStatus) }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- FECHA REGISTRO -->
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef>Registrado</th>
+              <td mat-cell *matCellDef="let p">
+                <span class="date-cell">{{ formatDate(p.createdAt) }}</span>
+              </td>
+            </ng-container>
+
+            <!-- ACCIONES -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let p">
+                <div class="actions-cell">
+                  <button mat-icon-button matTooltip="Ver detalle" (click)="toggleDetail(p)">
+                    <mat-icon>{{ expandedId() === p.id ? 'expand_less' : 'info_outline' }}</mat-icon>
+                  </button>
+                  @if (p.certificationStatus === 'approved') {
+                    <button mat-icon-button matTooltip="Descargar certificado" (click)="downloadCertificate(p)">
+                      <mat-icon>workspace_premium</mat-icon>
+                    </button>
+                  }
+                  <a mat-icon-button [routerLink]="['/events', p.eventId, 'participants', p.id, 'edit']" matTooltip="Editar">
+                    <mat-icon>edit</mat-icon>
+                  </a>
+                  @if (auth.isManager()) {
+                    <button mat-icon-button (click)="delete(p)" matTooltip="Eliminar" class="danger-btn">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  }
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- FILA EXPANDIBLE DE DETALLE -->
+            <ng-container matColumnDef="detail">
+              <td mat-cell *matCellDef="let p" [attr.colspan]="columns.length">
+                @if (expandedId() === p.id) {
+                  <div class="detail-row">
+                    <div class="detail-item">
+                      <mat-icon>home</mat-icon>
+                      <div>
+                        <span class="dl">Dirección</span>
+                        <span class="dv">{{ p.address || '—' }}</span>
+                      </div>
+                    </div>
+                    <div class="detail-item">
+                      <mat-icon>cake</mat-icon>
+                      <div>
+                        <span class="dl">Fecha de nacimiento</span>
+                        <span class="dv">{{ p.birthDate ? formatDate(p.birthDate) : '—' }}</span>
+                      </div>
+                    </div>
+                    <div class="detail-item">
+                      <mat-icon>business</mat-icon>
+                      <div>
+                        <span class="dl">Empresa / Cargo</span>
+                        <span class="dv">{{ p.company || '—' }} {{ p.position ? '· ' + p.position : '' }}</span>
+                      </div>
+                    </div>
+                    @if (p.score !== undefined && p.score !== null) {
+                      <div class="detail-item">
+                        <mat-icon>grade</mat-icon>
+                        <div>
+                          <span class="dl">Calificación</span>
+                          <span class="dv" [ngClass]="p.passed ? 'score-ok' : 'score-bad'">{{ p.score }} / 100</span>
+                        </div>
+                      </div>
+                    }
+                    <div class="detail-item">
+                      <mat-icon>event_available</mat-icon>
+                      <div>
+                        <span class="dl">Evento</span>
+                        <span class="dv">{{ eventName(p.eventId) }}</span>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columns"></tr>
+            <tr mat-row *matRowDef="let row; columns: columns;" class="data-row"
+                [ngClass]="expandedId() === row.id ? 'expanded-row' : ''"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['detail']" class="detail-container-row"></tr>
+          </table>
+
+          @if (!loading() && filtered().length === 0) {
+            <div class="empty-state">
+              <mat-icon>person_search</mat-icon>
+              <h3>Sin resultados</h3>
+              <p>{{ allParticipants().length === 0 ? 'Aún no hay personas registradas.' : 'Ningún registro coincide con los filtros.' }}</p>
+              @if (allParticipants().length === 0) {
+                <a mat-raised-button color="primary" routerLink="/">
+                  <mat-icon>link</mat-icon> Ver página de registro público
+                </a>
+              }
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+
+    </div>

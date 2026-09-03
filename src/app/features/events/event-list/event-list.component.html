@@ -1,0 +1,89 @@
+
+    <div class="page">
+      <div class="page-header">
+        <div>
+          <h1>Eventos de Certificación</h1>
+          <p>Gestión de eventos y capacitaciones</p>
+        </div>
+        @if (auth.isManager()) {
+          <div class="header-actions">
+            <a mat-stroked-button routerLink="import">
+              <mat-icon>upload_file</mat-icon> Importar eventos
+            </a>
+            <a mat-raised-button color="primary" routerLink="new">
+              <mat-icon>add</mat-icon> Nuevo Evento
+            </a>
+          </div>
+        }
+      </div>
+
+      <!-- FILTROS -->
+      <div class="filters-bar">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Buscar evento...</mat-label>
+          <input matInput [(ngModel)]="searchTerm" (ngModelChange)="onFilter()" placeholder="Nombre del evento">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+        <mat-form-field appearance="outline" style="width:180px">
+          <mat-label>Estado</mat-label>
+          <mat-select [(ngModel)]="statusFilter" (ngModelChange)="onFilter()">
+            <mat-option value="">Todos</mat-option>
+            <mat-option value="draft">Borrador</mat-option>
+            <mat-option value="active">Activo</mat-option>
+            <mat-option value="completed">Completado</mat-option>
+            <mat-option value="cancelled">Cancelado</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      @if (loading()) { <mat-progress-bar mode="indeterminate" /> }
+
+      <!-- EVENTS GRID -->
+      <div class="events-grid">
+        @for (event of events(); track event.id) {
+          <div class="event-card">
+            <div class="event-card-header">
+              <span class="status-badge" [ngClass]="'status-' + event.status">{{ statusLabel(event.status) }}</span>
+              @if (auth.isManager()) {
+                <button mat-icon-button [matMenuTriggerFor]="menu" class="action-btn">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <a mat-menu-item [routerLink]="[event.id, 'edit']"><mat-icon>edit</mat-icon> Editar</a>
+                  @if (event.status === 'draft') {
+                    <button mat-menu-item (click)="changeStatus(event, 'active')"><mat-icon>play_arrow</mat-icon> Activar</button>
+                  }
+                  @if (event.status === 'active') {
+                    <button mat-menu-item (click)="changeStatus(event, 'completed')"><mat-icon>check_circle</mat-icon> Completar</button>
+                  }
+                  @if (event.status === 'draft' || event.status === 'active') {
+                    <button mat-menu-item class="danger" (click)="changeStatus(event, 'cancelled')"><mat-icon>cancel</mat-icon> Cancelar evento</button>
+                  }
+                  @if (event.status === 'cancelled') {
+                    <button mat-menu-item (click)="changeStatus(event, 'draft')"><mat-icon>restore</mat-icon> Reactivar (borrador)</button>
+                  }
+                  <button mat-menu-item class="danger" (click)="deleteEvent(event)"><mat-icon>delete</mat-icon> Eliminar</button>
+                </mat-menu>
+              }
+            </div>
+            <div class="event-card-body">
+              <h3><a [routerLink]="[event.id]">{{ event.name }}</a></h3>
+              <p class="event-location"><mat-icon>place</mat-icon> {{ event.location || 'Sin ubicación' }}</p>
+              <p class="event-date"><mat-icon>calendar_today</mat-icon> {{ event.startDate | date:'dd MMM yyyy' }}</p>
+            </div>
+            <div class="event-card-footer">
+              <div class="stat"><mat-icon>group</mat-icon> {{ event.participantsCount ?? 0 }}</div>
+              <div class="stat"><mat-icon>verified</mat-icon> {{ event.certifiedCount ?? 0 }}</div>
+              <a mat-stroked-button [routerLink]="[event.id]" class="detail-btn">Ver detalle</a>
+            </div>
+          </div>
+        }
+        @empty {
+          <div class="empty-state">
+            <mat-icon>event_busy</mat-icon>
+            <p>No hay eventos que coincidan con los filtros</p>
+            @if (auth.isManager()) { <a mat-raised-button color="primary" routerLink="new">Crear primer evento</a> }
+          </div>
+        }
+      </div>
+    </div>

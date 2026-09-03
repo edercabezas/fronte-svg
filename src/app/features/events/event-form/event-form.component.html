@@ -1,0 +1,103 @@
+
+    <div class="page">
+      <div class="page-header">
+        <button mat-icon-button routerLink="/events"><mat-icon>arrow_back</mat-icon></button>
+        <div>
+          <h1>{{ isEdit ? 'Editar Evento' : 'Nuevo Evento' }}</h1>
+          <p>{{ isEdit ? 'Modifica los datos del evento' : 'Crea un nuevo evento de certificación' }}</p>
+        </div>
+      </div>
+
+      <mat-card class="form-card">
+        <mat-card-content>
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="form-grid">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nombre del evento *</mat-label>
+                <input matInput formControlName="name" placeholder="Ej: Certificación Seguridad Industrial">
+                @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
+                  <mat-error>El nombre es requerido</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Descripción</mat-label>
+                <textarea matInput formControlName="description" rows="3" placeholder="Descripción del evento..."></textarea>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Ubicación</mat-label>
+                <input matInput formControlName="location" placeholder="Ej: Sala de Capacitación A">
+                <mat-icon matPrefix>place</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Ciudad *</mat-label>
+                <input matInput formControlName="city" placeholder="Ej: Bogotá">
+                <mat-icon matPrefix>location_city</mat-icon>
+                @if (form.get('city')?.hasError('required') && form.get('city')?.touched) {
+                  <mat-error>La ciudad es requerida</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Fecha de inicio *</mat-label>
+                <input matInput formControlName="startDate" [matDatepicker]="pickerStart">
+                <mat-datepicker-toggle matIconSuffix [for]="pickerStart" />
+                <mat-datepicker #pickerStart />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Fecha de fin *</mat-label>
+                <input matInput formControlName="endDate" [matDatepicker]="pickerEnd">
+                <mat-datepicker-toggle matIconSuffix [for]="pickerEnd" />
+                <mat-datepicker #pickerEnd />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Modalidad *</mat-label>
+                <mat-select formControlName="modality">
+                  @for (m of modalities; track m) {
+                    <mat-option [value]="m">{{ m }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Cupo máximo *</mat-label>
+                <input matInput type="number" formControlName="maxCapacity" min="1">
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Plantilla de certificación *</mat-label>
+                <mat-select formControlName="templateId">
+                  @for (t of templates(); track t.id) {
+                    <mat-option [value]="t.id">{{ t.name }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Capacitador(es) asignado(s)</mat-label>
+                <mat-select formControlName="trainerIds" multiple>
+                  @for (t of trainers(); track t.id) {
+                    <mat-option [value]="t.id">{{ t.name }}</mat-option>
+                  }
+                </mat-select>
+                <mat-icon matPrefix>groups</mat-icon>
+                @if (trainers().length === 0) {
+                  <mat-hint>No hay capacitadores activos registrados</mat-hint>
+                }
+              </mat-form-field>
+            </div>
+
+            <div class="form-actions">
+              <button mat-button type="button" routerLink="/events">Cancelar</button>
+              <button mat-raised-button color="primary" type="submit" [disabled]="loading()">
+                @if (loading()) { <mat-spinner diameter="18" /> } @else { {{ isEdit ? 'Guardar cambios' : 'Crear evento' }} }
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>

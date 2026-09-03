@@ -1,0 +1,56 @@
+
+    <div class="page">
+      <div class="page-header">
+        <button mat-icon-button [routerLink]="['/events', eventId, 'participants']"><mat-icon>arrow_back</mat-icon></button>
+        <div>
+          <h1>Importar Participantes desde Excel</h1>
+          <p>Carga masiva de participantes para el evento #{{ eventId }}</p>
+        </div>
+      </div>
+
+      <mat-card>
+        <mat-card-content>
+          <div class="drop-zone" (click)="fileInput.click()" (dragover)="$event.preventDefault()" (drop)="onDrop($event)">
+            <mat-icon class="drop-icon">cloud_upload</mat-icon>
+            <p>Arrastra tu archivo Excel aquí o <strong>haz click para seleccionar</strong></p>
+            <small>Formatos aceptados: .xlsx, .xls · Máx 10MB</small>
+            <input #fileInput type="file" accept=".xlsx,.xls" (change)="onFileSelected($event)" style="display:none">
+          </div>
+
+          @if (selectedFile()) {
+            <div class="file-selected">
+              <mat-icon>description</mat-icon>
+              <span>{{ selectedFile()!.name }}</span>
+              <button mat-icon-button (click)="selectedFile.set(null)"><mat-icon>close</mat-icon></button>
+            </div>
+          }
+
+          @if (uploading()) { <mat-progress-bar mode="indeterminate" style="margin:16px 0" /> }
+
+          @if (result()) {
+            <div class="result-box">
+              <div class="result-success"><mat-icon>check_circle</mat-icon> {{ result()!.success }} participantes importados correctamente</div>
+              @if (result()!.errors.length > 0) {
+                <div class="result-errors">
+                  <strong>Errores encontrados:</strong>
+                  @for (err of result()!.errors; track err.row) {
+                    <div>Fila {{ err.row }}: {{ err.field }} — {{ err.message }}</div>
+                  }
+                </div>
+              }
+            </div>
+          }
+
+          <div class="template-section">
+            <mat-icon>info</mat-icon>
+            <span>El archivo Excel debe tener las columnas: <strong>nombre, documento, email, telefono, empresa, cargo</strong></span>
+          </div>
+        </mat-card-content>
+        <div class="card-actions">
+          <button mat-button [routerLink]="['/events', eventId, 'participants']">Cancelar</button>
+          <button mat-raised-button color="primary" [disabled]="!selectedFile() || uploading()" (click)="upload()">
+            <mat-icon>upload</mat-icon> Importar
+          </button>
+        </div>
+      </mat-card>
+    </div>

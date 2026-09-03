@@ -1,0 +1,96 @@
+
+    <div class="page">
+      @if (loading()) { <mat-progress-bar mode="indeterminate" /> }
+
+      @if (event(); as ev) {
+        <div class="page-header">
+          <button mat-icon-button routerLink="/events"><mat-icon>arrow_back</mat-icon></button>
+          <div class="header-info">
+            <div class="header-top">
+              <h1>{{ ev.name }}</h1>
+              <span class="status-badge" [ngClass]="'status-' + ev.status">{{ statusLabel(ev.status) }}</span>
+            </div>
+            <p>
+              <mat-icon inline>place</mat-icon> {{ ev.location }}{{ ev.location ? ', ' : '' }}{{ ev.city }}
+              &nbsp;·&nbsp; <mat-icon inline>laptop</mat-icon> {{ ev.modality }}
+              &nbsp;·&nbsp; <mat-icon inline>calendar_today</mat-icon> {{ ev.startDate | date:'dd MMM yyyy' }}
+            </p>
+            @if (ev.trainers.length > 0) {
+              <p class="trainers-line"><mat-icon inline>groups</mat-icon> Capacitador(es): {{ ev.trainers.map(t => t.name).join(', ') }}</p>
+            }
+          </div>
+          @if (auth.isManager()) {
+            <a mat-stroked-button [routerLink]="['/events', ev.id, 'edit']">
+              <mat-icon>edit</mat-icon> Editar
+            </a>
+          }
+        </div>
+
+        <!-- STATS ROW -->
+        <div class="stats-row">
+          <div class="stat-box"><span class="stat-num">{{ ev.participantsCount ?? 0 }}</span><span class="stat-lbl">Participantes</span></div>
+          <div class="stat-box"><span class="stat-num certified">{{ ev.certifiedCount ?? 0 }}</span><span class="stat-lbl">Certificados</span></div>
+          <div class="stat-box"><span class="stat-num pending">{{ (ev.participantsCount ?? 0) - (ev.certifiedCount ?? 0) }}</span><span class="stat-lbl">Pendientes/Reprobados</span></div>
+        </div>
+
+        <!-- TABS -->
+        <mat-tab-group animationDuration="200ms" class="tabs">
+          <mat-tab label="Participantes">
+            <div class="tab-content">
+              <div class="tab-header">
+                <h3>Participantes del Evento</h3>
+                <div class="tab-actions">
+                  <a mat-stroked-button [routerLink]="['/events', ev.id, 'participants', 'import']">
+                    <mat-icon>upload</mat-icon> Importar Excel
+                  </a>
+                  <a mat-raised-button color="primary" [routerLink]="['/events', ev.id, 'participants', 'new']">
+                    <mat-icon>person_add</mat-icon> Agregar
+                  </a>
+                </div>
+              </div>
+              <a mat-button [routerLink]="['/events', ev.id, 'participants']" class="view-all-link">
+                Ver todos los participantes →
+              </a>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Evidencias">
+            <div class="tab-content">
+              <div class="tab-header">
+                <h3>Archivos y Evidencias</h3>
+                <a mat-raised-button color="primary" [routerLink]="['/events', ev.id, 'evidence']">
+                  <mat-icon>upload_file</mat-icon> Subir archivos
+                </a>
+              </div>
+              <a mat-button [routerLink]="['/events', ev.id, 'evidence']" class="view-all-link">
+                Ver galería de evidencias →
+              </a>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Gastos">
+            <div class="tab-content">
+              <div class="tab-header">
+                <h3>Control de Gastos</h3>
+                <a mat-raised-button color="primary" [routerLink]="['/events', ev.id, 'expenses']">
+                  <mat-icon>add</mat-icon> Registrar gasto
+                </a>
+              </div>
+              <a mat-button [routerLink]="['/events', ev.id, 'expenses']" class="view-all-link">
+                Ver todos los gastos →
+              </a>
+            </div>
+          </mat-tab>
+
+          @if (auth.isManager()) {
+            <mat-tab label="Reportes">
+              <div class="tab-content">
+                <a mat-button [routerLink]="['/events', ev.id, 'reports']" class="view-all-link">
+                  Ir al centro de reportes →
+                </a>
+              </div>
+            </mat-tab>
+          }
+        </mat-tab-group>
+      }
+    </div>

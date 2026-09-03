@@ -1,0 +1,10 @@
+
+    <div class="app-shell">
+      <app-sidebar [collapsed]="sidebarCollapsed()" />
+      <div class="main-content">
+        <app-header [title]="pageTitle()" (toggleSidebar)="sidebarCollapsed.set(!sidebarCollapsed())" />
+        <main class="page-content">
+          <router-outlet />
+        </main>
+      </div>
+    </div>

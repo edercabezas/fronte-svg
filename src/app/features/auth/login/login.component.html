@@ -1,0 +1,48 @@
+
+    <div class="login-wrapper">
+      <div class="login-card">
+        <div class="login-brand">
+          <div class="brand-icon"><mat-icon>verified</mat-icon></div>
+          <h1>CertPlatform</h1>
+          <p>Gestión de Certificaciones y Eventos</p>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+          <mat-form-field appearance="outline">
+            <mat-label>Correo electrónico</mat-label>
+            <input matInput formControlName="email" type="email" placeholder="usuario@empresa.com" autocomplete="email">
+            <mat-icon matPrefix>email</mat-icon>
+            @if (form.get('email')?.hasError('required') && form.get('email')?.touched) {
+              <mat-error>El correo es requerido</mat-error>
+            }
+            @if (form.get('email')?.hasError('email') && form.get('email')?.touched) {
+              <mat-error>Correo inválido</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Contraseña</mat-label>
+            <input matInput formControlName="password" [type]="showPassword() ? 'text' : 'password'" autocomplete="current-password">
+            <mat-icon matPrefix>lock</mat-icon>
+            <button mat-icon-button matSuffix type="button" (click)="showPassword.set(!showPassword())">
+              <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
+              <mat-error>La contraseña es requerida</mat-error>
+            }
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" type="submit" [disabled]="loading()" class="submit-btn">
+            @if (loading()) {
+              <mat-spinner diameter="20" />
+            } @else {
+              Iniciar sesión
+            }
+          </button>
+        </form>
+
+        <div class="login-hint">
+          <strong>Demo:</strong> admin&#64;empresa.com · cualquier contraseña
+        </div>
+      </div>
+    </div>

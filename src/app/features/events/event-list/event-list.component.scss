@@ -1,0 +1,29 @@
+
+    .page { display: flex; flex-direction: column; gap: 20px; }
+    .page-header { display: flex; align-items: flex-start; justify-content: space-between; }
+    .header-actions { display: flex; gap: 8px; }
+    .page-header h1 { font-size: 22px; font-weight: 700; color: var(--text-1); margin: 0 0 4px; }
+    .page-header p { color: var(--text-3); margin: 0; font-size: 13px; }
+    .filters-bar { display: flex; gap: 12px; flex-wrap: wrap; }
+    .search-field { flex: 1; min-width: 200px; }
+    .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .event-card { background: var(--surface); border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; display: flex; flex-direction: column; }
+    .event-card-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px 0; }
+    .event-card-body { padding: 12px 16px; flex: 1; }
+    .event-card-body h3 { font-size: 15px; font-weight: 600; margin: 0 0 10px; }
+    .event-card-body h3 a { color: #0f3460; text-decoration: none; }
+    .event-card-body h3 a:hover { text-decoration: underline; }
+    .event-location, .event-date { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #777; margin: 4px 0; }
+    .event-location mat-icon, .event-date mat-icon { font-size: 14px; width: 14px; }
+    .event-card-footer { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-top: 1px solid #f0f2f7; }
+    .stat { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--text-2); }
+    .stat mat-icon { font-size: 16px; color: var(--text-3); }
+    .detail-btn { margin-left: auto; font-size: 12px; }
+    .status-badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+    .status-draft { background: #f3f4f6; color: #555; }
+    .status-active { background: var(--badge-success-bg); color: var(--badge-success-text); }
+    .status-completed { background: #e3f2fd; color: #0d47a1; }
+    .status-cancelled { background: var(--badge-error-bg); color: var(--badge-error-text); }
+    .empty-state { grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-3); }
+    .empty-state mat-icon { font-size: 48px; width: 48px; height: 48px; margin-bottom: 12px; }
+    .danger { color: #e94560 !important; }

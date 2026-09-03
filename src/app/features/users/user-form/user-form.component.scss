@@ -1,0 +1,6 @@
+.page { max-width: 560px; }
+.page-header { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+.page-header h1 { font-size: 20px; font-weight: 700; color: var(--text-1); margin: 0; }
+.form-col { display: flex; flex-direction: column; gap: 12px; padding-top: 12px; }
+.form-col mat-form-field { width: 100%; }
+.form-actions { display: flex; gap: 12px; justify-content: flex-end; }

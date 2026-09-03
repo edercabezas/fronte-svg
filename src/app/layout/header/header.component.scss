@@ -1,0 +1,76 @@
+.header {
+  height: 64px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 8px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+  transition: background 0.25s, border-color 0.25s;
+}
+
+.toggle-btn { color: var(--text-2); }
+
+.header-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-1);
+  transition: color 0.25s;
+}
+
+.header-spacer { flex: 1; }
+
+.theme-btn {
+  color: var(--text-2);
+  transition: color 0.2s;
+  &:hover { color: var(--text-1); }
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background 0.2s;
+  &:hover { background: var(--surface-hover); }
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4f46e5, #06b6d4);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.user-name {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+  transition: color 0.25s;
+}
+
+.user-role {
+  display: block;
+  font-size: 11px;
+  color: var(--text-3);
+  transition: color 0.25s;
+}
+
+.chevron {
+  color: var(--text-3);
+  font-size: 18px;
+}

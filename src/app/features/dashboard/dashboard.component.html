@@ -1,0 +1,123 @@
+
+    <div class="dashboard">
+      <div class="page-header">
+        <div>
+          <h1>Panel de Control</h1>
+          <p>{{ auth.isCapacitador() ? 'Resumen de tus capacitaciones asignadas' : 'Resumen general de certificaciones y eventos' }}</p>
+        </div>
+        @if (auth.isManager()) {
+          <a mat-raised-button color="primary" routerLink="/events/new">
+            <mat-icon>add</mat-icon> Nuevo Evento
+          </a>
+        }
+      </div>
+
+      @if (loading()) {
+        <div class="loading-state">
+          <mat-progress-bar mode="indeterminate" />
+          <p>Cargando información...</p>
+        </div>
+      }
+
+      @if (stats(); as s) {
+        <!-- KPI CARDS -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background: linear-gradient(135deg, #0f3460, #1a4a8a)">
+              <mat-icon>event</mat-icon>
+            </div>
+            <div class="kpi-info">
+              <span class="kpi-value">{{ s.totalEvents }}</span>
+              <span class="kpi-label">Total Eventos</span>
+            </div>
+            <div class="kpi-sub">{{ s.activeEvents }} activos · {{ s.completedEvents }} completados</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background: linear-gradient(135deg, #2e7d32, #388e3c)">
+              <mat-icon>verified_user</mat-icon>
+            </div>
+            <div class="kpi-info">
+              <span class="kpi-value">{{ s.totalCertified }}</span>
+              <span class="kpi-label">Certificados</span>
+            </div>
+            <div class="kpi-sub">{{ rate(s.totalCertified, s.totalParticipants) }}% del total</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background: linear-gradient(135deg, #f9a825, #fbc02d)">
+              <mat-icon>hourglass_top</mat-icon>
+            </div>
+            <div class="kpi-info">
+              <span class="kpi-value">{{ s.totalPending }}</span>
+              <span class="kpi-label">Pendientes</span>
+            </div>
+            <div class="kpi-sub">{{ rate(s.totalPending, s.totalParticipants) }}% del total</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background: linear-gradient(135deg, #c62828, #e53935)">
+              <mat-icon>cancel</mat-icon>
+            </div>
+            <div class="kpi-info">
+              <span class="kpi-value">{{ s.totalFailed }}</span>
+              <span class="kpi-label">Rechazados</span>
+            </div>
+            <div class="kpi-sub">{{ rate(s.totalFailed, s.totalParticipants) }}% del total</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background: linear-gradient(135deg, #e65100, #ef6c00)">
+              <mat-icon>attach_money</mat-icon>
+            </div>
+            <div class="kpi-info">
+              <span class="kpi-value">{{ s.totalCosts | currency:'COP':'$':'1.0-0' }}</span>
+              <span class="kpi-label">Costo Total</span>
+            </div>
+            <div class="kpi-sub">{{ auth.isCapacitador() ? 'Tus capacitaciones' : 'Todos los eventos' }}</div>
+          </div>
+        </div>
+
+        <!-- CHARTS -->
+        @if (charts(); as ch) {
+          <div class="charts-grid">
+            <mat-card class="chart-card">
+              <mat-card-header>
+                <mat-card-title>Participantes por Mes</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <canvas baseChart [data]="barChartData(ch)" [options]="barOptions" type="bar" style="max-height:220px"></canvas>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="chart-card">
+              <mat-card-header>
+                <mat-card-title>Distribución de Costos</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <canvas baseChart [data]="pieChartData(ch)" [options]="pieOptions" type="pie" style="max-height:220px"></canvas>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        }
+      }
+
+      <!-- UPCOMING EVENTS -->
+      @if (upcomingEvents().length > 0) {
+        <mat-card class="upcoming-card">
+          <mat-card-header>
+            <mat-card-title>Próximos Eventos</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            @for (item of upcomingEvents(); track item.event.id) {
+              <div class="upcoming-item">
+                <div class="upcoming-icon"><mat-icon>event</mat-icon></div>
+                <div class="upcoming-info">
+                  <a [routerLink]="['/events', item.event.id]" class="upcoming-name">{{ item.event.name }}</a>
+                  <span class="upcoming-location">{{ item.event.location }}</span>
+                </div>
+                <mat-chip [ngClass]="item.daysUntilStart <= 7 ? 'chip-urgent' : 'chip-normal'">
+                  {{ item.daysUntilStart }}d
+                </mat-chip>
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>

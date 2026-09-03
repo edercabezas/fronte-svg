@@ -1,0 +1,72 @@
+
+    <div class="page">
+      <div class="page-header">
+        <button mat-icon-button [routerLink]="['/events', eventId]"><mat-icon>arrow_back</mat-icon></button>
+        <div>
+          <h1>Evidencias del Evento</h1>
+          <p>Fotos, documentos y archivos asociados</p>
+        </div>
+        <label mat-raised-button color="primary" class="upload-btn">
+          <mat-icon>upload</mat-icon> Subir archivos
+          <input type="file" multiple accept="image/*,.pdf,.xlsx,.xls,.doc,.docx" (change)="onFilesSelected($event)" style="display:none">
+        </label>
+      </div>
+
+      <!-- FILTER CHIPS -->
+      <div class="filter-chips">
+        @for (f of filterOptions; track f.value) {
+          <button mat-stroked-button [ngClass]="activeFilter() === f.value ? 'chip-active' : ''" (click)="setFilter(f.value)">
+            <mat-icon>{{ f.icon }}</mat-icon> {{ f.label }}
+          </button>
+        }
+      </div>
+
+      @if (uploading()) { <mat-progress-bar mode="indeterminate" /> }
+      @if (loading()) { <mat-progress-bar mode="indeterminate" /> }
+
+      <!-- PHOTOS SECTION -->
+      @if (photos().length > 0) {
+        <div class="section-title"><mat-icon>photo_library</mat-icon> Fotografías ({{ photos().length }})</div>
+        <div class="photos-grid">
+          @for (file of photos(); track file.id) {
+            <div class="photo-item">
+              <div class="photo-placeholder"><mat-icon>image</mat-icon><span>{{ file.originalName }}</span></div>
+              <div class="photo-overlay">
+                <a mat-icon-button [href]="svc.getDownloadUrl(file.id)" matTooltip="Descargar"><mat-icon>download</mat-icon></a>
+                @if (auth.isManager()) {
+                  <button mat-icon-button (click)="delete(file)" matTooltip="Eliminar" class="danger"><mat-icon>delete</mat-icon></button>
+                }
+              </div>
+              @if (file.description) { <div class="photo-caption">{{ file.description }}</div> }
+            </div>
+          }
+        </div>
+      }
+
+      <!-- DOCUMENTS SECTION -->
+      @if (documents().length > 0) {
+        <div class="section-title"><mat-icon>folder</mat-icon> Documentos ({{ documents().length }})</div>
+        <div class="docs-list">
+          @for (file of documents(); track file.id) {
+            <div class="doc-item">
+              <div class="doc-icon" [ngClass]="'doc-' + file.type"><mat-icon>{{ typeIcon(file.type) }}</mat-icon></div>
+              <div class="doc-info">
+                <span class="doc-name">{{ file.originalName }}</span>
+                <span class="doc-meta">{{ (file.fileSize / 1024).toFixed(0) }} KB · {{ file.uploadedByName }}</span>
+              </div>
+              <a mat-stroked-button [href]="svc.getDownloadUrl(file.id)"><mat-icon>download</mat-icon> Descargar</a>
+              @if (auth.isManager()) {
+                <button mat-icon-button (click)="delete(file)" class="danger"><mat-icon>delete</mat-icon></button>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      @if (!loading() && evidence().length === 0) {
+        <div class="empty">
+          <mat-icon>photo_library</mat-icon>
+          <p>No hay evidencias cargadas para este evento</p>
+        </div>
+      }
+    </div>
