@@ -45,4 +45,18 @@ export class ParticipantImportComponent {
       error: () => { this.toast.error('Error al importar'); this.uploading.set(false); },
     });
   }
+
+  downloadTemplate(): void {
+    this.svc.downloadImportTemplate(this.eventId).subscribe({
+      next: blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'plantilla-carga-masiva-participantes.xlsx';
+        a.click();
+        URL.revokeObjectURL(url);
+      },
+      error: () => this.toast.error('No se pudo descargar la plantilla'),
+    });
+  }
 }

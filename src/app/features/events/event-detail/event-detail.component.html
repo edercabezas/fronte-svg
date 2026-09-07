@@ -19,7 +19,7 @@
               <p class="trainers-line"><mat-icon inline>groups</mat-icon> Capacitador(es): {{ ev.trainers.map(t => t.name).join(', ') }}</p>
             }
           </div>
-          @if (auth.isManager()) {
+          @if (auth.canManageEvent(ev)) {
             <a mat-stroked-button [routerLink]="['/events', ev.id, 'edit']">
               <mat-icon>edit</mat-icon> Editar
             </a>
@@ -34,63 +34,65 @@
         </div>
 
         <!-- TABS -->
-        <mat-tab-group animationDuration="200ms" class="tabs">
-          <mat-tab label="Participantes">
-            <div class="tab-content">
-              <div class="tab-header">
-                <h3>Participantes del Evento</h3>
-                <div class="tab-actions">
-                  <a mat-stroked-button [routerLink]="['/events', ev.id, 'participants', 'import']">
-                    <mat-icon>upload</mat-icon> Importar Excel
-                  </a>
-                  <a mat-raised-button color="primary" [routerLink]="['/events', ev.id, 'participants', 'new']">
-                    <mat-icon>person_add</mat-icon> Agregar
-                  </a>
-                </div>
-              </div>
-              <a mat-button [routerLink]="['/events', ev.id, 'participants']" class="view-all-link">
-                Ver todos los participantes →
-              </a>
-            </div>
-          </mat-tab>
-
-          <mat-tab label="Evidencias">
-            <div class="tab-content">
-              <div class="tab-header">
-                <h3>Archivos y Evidencias</h3>
-                <a mat-raised-button color="primary" [routerLink]="['/events', ev.id, 'evidence']">
-                  <mat-icon>upload_file</mat-icon> Subir archivos
-                </a>
-              </div>
-              <a mat-button [routerLink]="['/events', ev.id, 'evidence']" class="view-all-link">
-                Ver galería de evidencias →
-              </a>
-            </div>
-          </mat-tab>
-
-          <mat-tab label="Gastos">
-            <div class="tab-content">
-              <div class="tab-header">
-                <h3>Control de Gastos</h3>
-                <a mat-raised-button color="primary" [routerLink]="['/events', ev.id, 'expenses']">
-                  <mat-icon>add</mat-icon> Registrar gasto
-                </a>
-              </div>
-              <a mat-button [routerLink]="['/events', ev.id, 'expenses']" class="view-all-link">
-                Ver todos los gastos →
-              </a>
-            </div>
-          </mat-tab>
-
-          @if (auth.isManager()) {
-            <mat-tab label="Reportes">
+        @if (!auth.isCargador()) {
+          <mat-tab-group animationDuration="200ms" class="tabs">
+            <mat-tab label="Participantes">
               <div class="tab-content">
-                <a mat-button [routerLink]="['/events', ev.id, 'reports']" class="view-all-link">
-                  Ir al centro de reportes →
+                <div class="tab-header">
+                  <h3>Participantes del Evento</h3>
+                  <div class="tab-actions">
+                    <a mat-stroked-button [routerLink]="['/events', ev.id, 'participants', 'import']">
+                      <mat-icon>upload</mat-icon> Importar Excel
+                    </a>
+                    <a mat-raised-button color="primary" [routerLink]="['/events', ev.id, 'participants', 'new']">
+                      <mat-icon>person_add</mat-icon> Agregar
+                    </a>
+                  </div>
+                </div>
+                <a mat-button [routerLink]="['/events', ev.id, 'participants']" class="view-all-link">
+                  Ver todos los participantes →
                 </a>
               </div>
             </mat-tab>
-          }
-        </mat-tab-group>
+
+            <mat-tab label="Evidencias">
+              <div class="tab-content">
+                <div class="tab-header">
+                  <h3>Archivos y Evidencias</h3>
+                  <a mat-raised-button color="primary" [routerLink]="['/events', ev.id, 'evidence']">
+                    <mat-icon>upload_file</mat-icon> Subir archivos
+                  </a>
+                </div>
+                <a mat-button [routerLink]="['/events', ev.id, 'evidence']" class="view-all-link">
+                  Ver galería de evidencias →
+                </a>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Gastos">
+              <div class="tab-content">
+                <div class="tab-header">
+                  <h3>Control de Gastos</h3>
+                  <a mat-raised-button color="primary" [routerLink]="['/events', ev.id, 'expenses']">
+                    <mat-icon>add</mat-icon> Registrar gasto
+                  </a>
+                </div>
+                <a mat-button [routerLink]="['/events', ev.id, 'expenses']" class="view-all-link">
+                  Ver todos los gastos →
+                </a>
+              </div>
+            </mat-tab>
+
+            @if (auth.isManager()) {
+              <mat-tab label="Reportes">
+                <div class="tab-content">
+                  <a mat-button [routerLink]="['/events', ev.id, 'reports']" class="view-all-link">
+                    Ir al centro de reportes →
+                  </a>
+                </div>
+              </mat-tab>
+            }
+          </mat-tab-group>
+        }
       }
     </div>

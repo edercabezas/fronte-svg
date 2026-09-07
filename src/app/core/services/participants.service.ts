@@ -49,6 +49,10 @@ export class ParticipantsService {
     return this.http.get(`${this.base}/${eventId}/participants/${participantId}/certificate`, { responseType: 'blob' });
   }
 
+  downloadImportTemplate(eventId: number): Observable<Blob> {
+    return this.http.get(`${this.base}/${eventId}/participants/import/template`, { responseType: 'blob' });
+  }
+
   importExcel(eventId: number, file: File): Observable<ImportResult> {
     if (environment.useMocks) {
       const result: ImportResult = { success: 5, errors: [] };

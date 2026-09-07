@@ -8,6 +8,83 @@
         </div>
       </div>
 
+      <mat-card class="template-card">
+        <mat-card-content>
+          <div class="template-header">
+            <div>
+              <h3><mat-icon inline>description</mat-icon> Plantilla de columnas</h3>
+              <p>Descarga el archivo de ejemplo con los encabezados correctos, una fila de muestra y una hoja de instrucciones.</p>
+            </div>
+            <button mat-stroked-button color="primary" (click)="downloadTemplate()">
+              <mat-icon>download</mat-icon> Descargar plantilla Excel
+            </button>
+          </div>
+
+          <div class="table-wrap">
+            <table class="fields-table">
+              <thead>
+                <tr>
+                  <th>Encabezado</th>
+                  <th>Obligatorio</th>
+                  <th>Formato / valores válidos</th>
+                  <th>Ejemplo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>nombre</code></td>
+                  <td class="req">Sí</td>
+                  <td>Texto</td>
+                  <td>Pedro Ramírez</td>
+                </tr>
+                <tr>
+                  <td><code>documento</code></td>
+                  <td class="req">Sí</td>
+                  <td>Texto / número</td>
+                  <td>1020304050</td>
+                </tr>
+                <tr>
+                  <td><code>tipodocumento</code></td>
+                  <td class="opt">No</td>
+                  <td>CC / CE / TI / PA / RC</td>
+                  <td>CC</td>
+                </tr>
+                <tr>
+                  <td><code>correo</code></td>
+                  <td class="opt">No</td>
+                  <td>Correo electrónico</td>
+                  <td>pedro&#64;empresa.com</td>
+                </tr>
+                <tr>
+                  <td><code>telefono</code></td>
+                  <td class="opt">No</td>
+                  <td>Texto / número</td>
+                  <td>3001234567</td>
+                </tr>
+                <tr>
+                  <td><code>empresa</code></td>
+                  <td class="opt">No</td>
+                  <td>Texto</td>
+                  <td>Operaciones SA</td>
+                </tr>
+                <tr>
+                  <td><code>cargo</code></td>
+                  <td class="opt">No</td>
+                  <td>Texto</td>
+                  <td>Operario</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <ul class="notes-list">
+            <li>La primera fila del archivo debe tener <strong>exactamente estos encabezados</strong>, sin cambiar nombres ni orden.</li>
+            <li>Cada fila inscribe a un participante nuevo en este evento.</li>
+            <li>Si el número de <strong>documento</strong> ya existe en el sistema, se actualizan sus datos de contacto y se inscribe en este evento (no se duplica).</li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+
       <mat-card>
         <mat-card-content>
           <div class="drop-zone" (click)="fileInput.click()" (dragover)="$event.preventDefault()" (drop)="onDrop($event)">
@@ -40,11 +117,6 @@
               }
             </div>
           }
-
-          <div class="template-section">
-            <mat-icon>info</mat-icon>
-            <span>El archivo Excel debe tener las columnas: <strong>nombre, documento, email, telefono, empresa, cargo</strong></span>
-          </div>
         </mat-card-content>
         <div class="card-actions">
           <button mat-button [routerLink]="['/events', eventId, 'participants']">Cancelar</button>

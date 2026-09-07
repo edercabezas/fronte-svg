@@ -72,7 +72,7 @@ export class AuthService {
     return this.currentUser()?.role === 'capacitador';
   }
 
-  // Rol restringido: solo puede crear eventos (manual o carga masiva), nada más
+  // Rol restringido: solo administra eventos (crearlos uno a uno o por carga masiva, editar/ver/eliminar los suyos), nada más
   isCargador(): boolean {
     return this.currentUser()?.role === 'cargador';
   }
@@ -85,6 +85,24 @@ export class AuthService {
   // Administrador, administrativo o cargador: pueden crear eventos
   canCreateEvents(): boolean {
     return this.isManager() || this.isCargador();
+  }
+
+  // Puede editar ESE evento / cambiar su estado (activar, completar, cancelar):
+  // administrador y administrativo siempre; capacitador solo si está asignado; cargador solo si lo creó.
+  canManageEvent(event: { createdBy: number; trainerIds: number[] }): boolean {
+    if (this.isManager()) return true;
+    const userId = this.currentUser()?.id;
+    if (this.isCapacitador()) return !!userId && event.trainerIds.includes(userId);
+    if (this.isCargador()) return !!userId && event.createdBy === userId;
+    return false;
+  }
+
+  // Eliminar ESE evento: administrador, administrativo, y cargador si lo creó. El capacitador no elimina.
+  canDeleteEvent(event: { createdBy: number }): boolean {
+    if (this.isManager()) return true;
+    const userId = this.currentUser()?.id;
+    if (this.isCargador()) return !!userId && event.createdBy === userId;
+    return false;
   }
 
   private setSession(response: LoginResponse): void {

@@ -12,6 +12,7 @@ interface NavItem {
 }
 
 const CARGADOR_NAV_ITEMS: NavItem[] = [
+  { label: 'Eventos', icon: 'event', route: '/events' },
   { label: 'Nuevo Evento', icon: 'add_circle', route: '/events/new' },
   { label: 'Carga masiva', icon: 'upload_file', route: '/events/import' },
 ];
@@ -35,7 +36,7 @@ export class SidebarComponent {
   ];
 
   get visibleItems(): NavItem[] {
-    // El cargador solo puede crear eventos: no ve el resto del menú
+    // El cargador solo administra eventos (los suyos): no ve dashboard, registros ni usuarios
     if (this.auth.isCargador()) return CARGADOR_NAV_ITEMS;
     return this.navItems.filter(item => !item.adminOnly || this.auth.isAdmin());
   }

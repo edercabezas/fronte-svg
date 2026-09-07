@@ -2,9 +2,9 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-// Ruta de inicio según el rol: el cargador solo tiene acceso a creación de eventos
+// Ruta de inicio según el rol: el cargador solo tiene acceso a la gestión de eventos
 export function homeRoute(auth: AuthService): string {
-  return auth.isCargador() ? '/events/new' : '/dashboard';
+  return auth.isCargador() ? '/events' : '/dashboard';
 }
 
 export const adminGuard: CanActivateFn = () => {

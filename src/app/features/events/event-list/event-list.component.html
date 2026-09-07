@@ -5,7 +5,7 @@
           <h1>Eventos de Certificación</h1>
           <p>Gestión de eventos y capacitaciones</p>
         </div>
-        @if (auth.isManager()) {
+        @if (auth.canCreateEvents()) {
           <div class="header-actions">
             <a mat-stroked-button routerLink="import">
               <mat-icon>upload_file</mat-icon> Importar eventos
@@ -44,25 +44,29 @@
           <div class="event-card">
             <div class="event-card-header">
               <span class="status-badge" [ngClass]="'status-' + event.status">{{ statusLabel(event.status) }}</span>
-              @if (auth.isManager()) {
+              @if (auth.canManageEvent(event) || auth.canDeleteEvent(event)) {
                 <button mat-icon-button [matMenuTriggerFor]="menu" class="action-btn">
                   <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
-                  <a mat-menu-item [routerLink]="[event.id, 'edit']"><mat-icon>edit</mat-icon> Editar</a>
-                  @if (event.status === 'draft') {
-                    <button mat-menu-item (click)="changeStatus(event, 'active')"><mat-icon>play_arrow</mat-icon> Activar</button>
+                  @if (auth.canManageEvent(event)) {
+                    <a mat-menu-item [routerLink]="[event.id, 'edit']"><mat-icon>edit</mat-icon> Editar</a>
+                    @if (event.status === 'draft') {
+                      <button mat-menu-item (click)="changeStatus(event, 'active')"><mat-icon>play_arrow</mat-icon> Activar</button>
+                    }
+                    @if (event.status === 'active') {
+                      <button mat-menu-item (click)="changeStatus(event, 'completed')"><mat-icon>check_circle</mat-icon> Completar</button>
+                    }
+                    @if (event.status === 'draft' || event.status === 'active') {
+                      <button mat-menu-item class="danger" (click)="changeStatus(event, 'cancelled')"><mat-icon>cancel</mat-icon> Cancelar evento</button>
+                    }
+                    @if (event.status === 'cancelled') {
+                      <button mat-menu-item (click)="changeStatus(event, 'draft')"><mat-icon>restore</mat-icon> Reactivar (borrador)</button>
+                    }
                   }
-                  @if (event.status === 'active') {
-                    <button mat-menu-item (click)="changeStatus(event, 'completed')"><mat-icon>check_circle</mat-icon> Completar</button>
+                  @if (auth.canDeleteEvent(event)) {
+                    <button mat-menu-item class="danger" (click)="deleteEvent(event)"><mat-icon>delete</mat-icon> Eliminar</button>
                   }
-                  @if (event.status === 'draft' || event.status === 'active') {
-                    <button mat-menu-item class="danger" (click)="changeStatus(event, 'cancelled')"><mat-icon>cancel</mat-icon> Cancelar evento</button>
-                  }
-                  @if (event.status === 'cancelled') {
-                    <button mat-menu-item (click)="changeStatus(event, 'draft')"><mat-icon>restore</mat-icon> Reactivar (borrador)</button>
-                  }
-                  <button mat-menu-item class="danger" (click)="deleteEvent(event)"><mat-icon>delete</mat-icon> Eliminar</button>
                 </mat-menu>
               }
             </div>
@@ -82,7 +86,7 @@
           <div class="empty-state">
             <mat-icon>event_busy</mat-icon>
             <p>No hay eventos que coincidan con los filtros</p>
-            @if (auth.isManager()) { <a mat-raised-button color="primary" routerLink="new">Crear primer evento</a> }
+            @if (auth.canCreateEvents()) { <a mat-raised-button color="primary" routerLink="new">Crear primer evento</a> }
           </div>
         }
       </div>
